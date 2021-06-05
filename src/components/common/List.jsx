@@ -5,11 +5,7 @@ let List = ({ data, handleClick }) => {
     </li>
   ));
 
-  return data.length ? (
-    <ol>{result}</ol>
-  ) : (
-    <p className="load">List of EV charging locations are loading...</p>
-  );
+  return <ol>{result}</ol>;
 };
 
 export default List;

@@ -1,16 +1,18 @@
 body {
   margin: 0;
-  padding: 30px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.container.dark {
+  background-color: black;
+  color: greenyellow;
 }
 
 .symbol img {
@@ -33,14 +35,20 @@ code {
   align-content: center;
 }
 
-/* .list {
-  padding: 0;
-  margin: 0;
-} */
-
 ol {
-  margin: 0;
+  width: 200px;
+  margin: auto;
   padding: 0;
+}
+
+.list {
+  align-items: center;
+  min-width: 200px;
+}
+
+.list button {
+  margin: 10px 20px;
+  padding: 5px;
 }
 
 .list li {
@@ -48,24 +56,94 @@ ol {
   cursor: pointer;
 }
 
-h5,
+.list li:hover {
+  color: #2196f3;
+}
+
+h3,
 .load {
-  margin: 30px;
+  width: auto;
+  margin: 20px;
 }
 
 .load {
-  /* padding: 50px; */
   max-width: 100px;
 }
 
 .lists {
   display: flex;
-  min-height: 400px;
   /* flex-direction: row; */
-  /* margin-left: 10px; */
+  /* justify-content: space-between; */
+  min-height: 400px;
+}
+
+.sarchContainer {
+  display: flex;
+  flex-direction: column;
+  /* position: absolute; */
+  /* left: 3%; */
+  /* top: 15%; */
 }
 
 .search {
+  display: block;
   padding: 5px;
-  margin-bottom: 10px;
+  margin: 10px 0;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 20px;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #2196f3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }
