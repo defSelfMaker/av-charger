@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 let Search = ({ value, handleChange }) => {
   return (
     <input

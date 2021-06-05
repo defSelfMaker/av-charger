@@ -6,7 +6,7 @@ let List = ({ data, handleClick }) => {
   ));
 
   return data.length ? (
-    <ol className="list">{result}</ol>
+    <ol>{result}</ol>
   ) : (
     <p className="load">List of EV charging locations are loading...</p>
   );

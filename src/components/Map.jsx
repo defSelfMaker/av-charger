@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import ReactMapGl, { Marker } from "react-map-gl";
+import React, { useState, useEffect, useRef } from "react";
+import ReactMapGl from "react-map-gl";
 import CurrentList from "./CurrentList";
 import Information from "./Information";
 import HistoryList from "./HistoryList";
 import Search from "./Search";
 import MarkerProducer from "./MarkerProducer";
-import getData from "../utils/apiCall";
 import filteredData from "../utils/filterData";
+import debounce from "../utils/debounce";
 
 let Map = () => {
   const [viewport, setViewport] = useState({
@@ -21,12 +21,32 @@ let Map = () => {
   const [loading, setLoading] = useState(true);
   const [history, setHistory] = useState([]);
   const [value, setValue] = useState("");
+  const controllerRef = useRef(new AbortController());
 
   useEffect(() => {
-    getData(viewport.latitude, viewport.longitude).then((data) => {
-      setData(data);
-      setLoading(false);
-    });
+    async function getDataIn() {
+      if (controllerRef.current) {
+        controllerRef.current.abort();
+      }
+      const controller = new AbortController();
+      controllerRef.current = controller;
+      try {
+        const res = await fetch(
+          `https://api.openchargemap.io/v3/poi/?output=json&countrycode=US&maxresults=5&key=39532bd3-37be-4ec9-9c2e-5b59f3af3521&latitude=${viewport.latitude}&longitude=${viewport.longitude}&distance=20&distanceunit=Miles`,
+          {
+            signal: controllerRef.current?.signal,
+          }
+        );
+        const data = await res.json();
+        setData(data);
+        setLoading(false);
+        controllerRef.current = null;
+      } catch (e) {
+        console.log("error here:", e);
+      }
+    }
+
+    getDataIn();
   }, [viewport.latitude, viewport.longitude]);
 
   useEffect(() => {
@@ -50,13 +70,6 @@ let Map = () => {
 
   let handleClick = (point) => {
     setSelectedStation(point);
-    let newHistory = [...history, point];
-    setHistory(newHistory);
-    setViewport({
-      ...viewport,
-      latitude: point.AddressInfo.Latitude,
-      longitude: point.AddressInfo.Longitude,
-    });
   };
 
   let filteredDataArray = value === "" ? data : filteredData(value, data);
@@ -68,8 +81,11 @@ let Map = () => {
       ) : (
         <>
           <Search
-            handleChange={(e) => setValue(e.target.value)}
-            value={value}
+            handleChange={(e) => {
+              const deb = debounce(() => setValue(e.target.value));
+              deb();
+            }}
+            // value={value}
           />
           <ReactMapGl
             {...viewport}
@@ -80,7 +96,10 @@ let Map = () => {
             <MarkerProducer
               selectedStation={selectedStation}
               data={filteredDataArray}
-              handleClick={handleClick}
+              handleClick={(point) => {
+                handleClick(point);
+                setHistory((prevHistory) => [...prevHistory, point]);
+              }}
               searchValue={value}
             />
             {selectedStation ? (
@@ -91,16 +110,29 @@ let Map = () => {
             ) : null}
           </ReactMapGl>
           <div className="lists">
-            <div>
+            <div className="list">
               <h5>Current List</h5>
-              <CurrentList data={filteredDataArray} handleClick={handleClick} />
+              <CurrentList
+                data={filteredDataArray}
+                handleClick={(point) => {
+                  handleClick(point);
+                  setHistory((prevHistory) => [...prevHistory, point]);
+                }}
+              />
             </div>
-            <div>
+            <div className="list">
               <h5>History List</h5>
               <HistoryList
                 cleanHistory={() => setHistory([])}
                 data={history}
-                handleClick={handleClick}
+                handleClick={(point) => {
+                  handleClick(point);
+                  setViewport({
+                    ...viewport,
+                    latitude: point.AddressInfo.Latitude,
+                    longitude: point.AddressInfo.Longitude,
+                  });
+                }}
               />
             </div>
           </div>
