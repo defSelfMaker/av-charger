@@ -9,7 +9,7 @@ let Information = ({ selectedStation, setSelectedStation }) => {
         setSelectedStation(null);
       }}
     >
-      <div>
+      <div className="popup">
         <p>Town: {selectedStation.AddressInfo.Town}</p>
         <p>
           Usage cost:{" "}

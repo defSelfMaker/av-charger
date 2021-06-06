@@ -33,7 +33,7 @@ let MarkerProducer = ({ searchValue, selectedStation, data, handleClick }) => {
           <img
             alt="icon for EV cahrging stations"
             onClick={() => handleClick(selectedStation)}
-            src="ev.png"
+            src="https://angliacarcharging.co.uk/wp-content/uploads/2020/09/acc-service-icon-circle-blue-charging-station.png"
           />
         </div>
       </Marker>
@@ -50,7 +50,7 @@ let MarkerProducer = ({ searchValue, selectedStation, data, handleClick }) => {
               <img
                 alt="icon for EV cahrging stations"
                 onClick={() => handleClick(item)}
-                src="ev.png"
+                src="https://angliacarcharging.co.uk/wp-content/uploads/2020/09/acc-service-icon-circle-blue-charging-station.png"
               />
             </div>
           </Marker>

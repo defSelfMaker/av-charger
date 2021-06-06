@@ -12,6 +12,8 @@
     "react-dom": "^17.0.2",
     "react-map-gl": "^6.1.15",
     "react-scripts": "4.0.3",
+    "swr": "^0.5.6",
+    "use-supercluster": "^0.2.9",
     "web-vitals": "^1.1.2"
   },
   "scripts": {

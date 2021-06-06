@@ -10,6 +10,14 @@ code {
     monospace;
 }
 
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+}
+
 .container.dark {
   background-color: black;
   color: greenyellow;
@@ -27,23 +35,15 @@ code {
   transition: 400ms;
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  align-content: center;
-}
-
 ol {
-  width: 200px;
-  margin: auto;
   padding: 0;
 }
 
 .list {
   align-items: center;
   min-width: 200px;
+  max-height: 200px;
+  overflow: scroll;
 }
 
 .list button {
@@ -72,17 +72,12 @@ h3,
 
 .lists {
   display: flex;
-  /* flex-direction: row; */
-  /* justify-content: space-between; */
   min-height: 400px;
 }
 
 .sarchContainer {
   display: flex;
   flex-direction: column;
-  /* position: absolute; */
-  /* left: 3%; */
-  /* top: 15%; */
 }
 
 .search {
@@ -146,4 +141,18 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+/* .cluster-marker {
+  color: #fff;
+  background: #1978c8;
+  border-radius: 50%;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+
+.popup {
+  color: crimson;
 }

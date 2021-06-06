@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import ReactMapGl from "react-map-gl";
 import CurrentList from "./CurrentList";
-import Information from "./Information";
 import HistoryList from "./HistoryList";
 import Search from "./Search";
-import MarkerProducer from "./MarkerProducer";
 import Toggle from "./Toggle";
 import filteredData from "../utils/filterData";
 import debounce from "../utils/debounce";
+import MapProducer from "./MapProducer";
 
 let Map = () => {
   const [viewport, setViewport] = useState({
@@ -23,6 +21,7 @@ let Map = () => {
   const [history, setHistory] = useState([]);
   const [value, setValue] = useState("");
   const [darkMode, setDarkMode] = useState(false);
+  const [error, setError] = useState(false);
   const controllerRef = useRef(new AbortController());
 
   useEffect(() => {
@@ -35,7 +34,7 @@ let Map = () => {
       try {
         // `https://api.openchargemap.io/v3/poi/?output=json&countrycode=US&maxresults=5&key=39532bd3-37be-4ec9-9c2e-5b59f3af3521&latitude=${viewport.latitude}&longitude=${viewport.longitude}&distance=20&distanceunit=Miles`,
         const res = await fetch(
-          `https://api.openchargemap.io/v3/poi/?output=json&countrycode=US&maxresults=5&key=39532bd3-37be-4ec9-9c2e-5b59f3af3521&latitude=${viewport.latitude}&longitude=${viewport.longitude}&distance=20&distanceunit=Miles`,
+          `https://api.openchargemap.io/v3/poi/?output=json&countrycode=US&maxresults=50&key=39532bd3-37be-4ec9-9c2e-5b59f3af3521&latitude=${viewport.latitude}&longitude=${viewport.longitude}&distance=20&distanceunit=Miles`,
           {
             signal: controllerRef.current?.signal,
           }
@@ -45,7 +44,12 @@ let Map = () => {
         setLoading(false);
         controllerRef.current = null;
       } catch (e) {
-        console.log("error here:", e.message);
+        if (e.message === "The user aborted a request.") {
+          console.log("------> abortion message");
+        } else {
+          setError(true);
+          console.log("------> different message", e.message);
+        }
       }
     }
 
@@ -82,6 +86,10 @@ let Map = () => {
   let filteredDataArray = value === "" ? data : filteredData(value, data);
   let classForWrapper = darkMode ? "container dark" : "container";
 
+  if (error) {
+    return <h1>Sorry something went wrong...</h1>;
+  }
+
   return (
     <div className={classForWrapper}>
       {loading ? (
@@ -95,35 +103,18 @@ let Map = () => {
               const deb = debounce(() => setValue(e.target.value));
               deb();
             }}
-            // value={value}
           />
-          <ReactMapGl
-            {...viewport}
-            mapboxApiAccessToken="pk.eyJ1Ijoiam9zZXBmIiwiYSI6ImNrcGdobHFxazA3NmQybnAwMnJ4aHhveXEifQ._9w1jM-wQwYYx9At3BUisw"
-            onViewportChange={(viewport) => setViewport(viewport)}
-            mapStyle="mapbox://styles/josepf/ckph6pvgp2dao17o988prczi2"
-            // mapStyle={
-            //   darkMode
-            //     ? "mapbox://styles/josepf/ckph76sdz0ovh17qwiar0zda5"
-            //     : "mapbox://styles/josepf/ckph6pvgp2dao17o988prczi2"
-            // }
-          >
-            <MarkerProducer
-              selectedStation={selectedStation}
-              data={filteredDataArray}
-              handleClick={(point) => {
-                handleClick(point);
-                setHistory((prevHistory) => [...prevHistory, point]);
-              }}
-              searchValue={value}
-            />
-            {selectedStation ? (
-              <Information
-                selectedStation={selectedStation}
-                setSelectedStation={setSelectedStation}
-              />
-            ) : null}
-          </ReactMapGl>
+          <MapProducer
+            viewport={viewport}
+            darkMode={darkMode}
+            filteredDataArray={filteredDataArray}
+            setViewport={setViewport}
+            selectedStation={selectedStation}
+            searchValue={value}
+            handleClick={handleClick}
+            setHistory={setHistory}
+            setSelectedStation={setSelectedStation}
+          />
           <div className="lists">
             <div className="list">
               <h3>Current List</h3>
