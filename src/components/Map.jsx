@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import CurrentList from "./CurrentList";
 import HistoryList from "./HistoryList";
 import Search from "./Search";
 import Toggle from "./Toggle";
-import filteredData from "../utils/filterData";
-import debounce from "../utils/debounce";
 import MapProducer from "./MapProducer";
+import filteredData from "../utils/filterData";
+import debounce from "lodash.debounce";
 
 let Map = () => {
   const [viewport, setViewport] = useState({
@@ -23,6 +23,11 @@ let Map = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [error, setError] = useState(false);
   const controllerRef = useRef(new AbortController());
+
+  const debouncedValue = useCallback(
+    debounce((nextValue) => setValue(nextValue), 1000),
+    []
+  );
 
   useEffect(() => {
     async function getDataIn() {
@@ -52,7 +57,6 @@ let Map = () => {
         }
       }
     }
-
     getDataIn();
   }, [viewport.latitude, viewport.longitude]);
 
@@ -79,8 +83,8 @@ let Map = () => {
     setSelectedStation(point);
   };
 
-  let handleTheme = (value) => {
-    setDarkMode(value);
+  let handleTheme = (isDark) => {
+    setDarkMode(isDark);
   };
 
   let filteredDataArray = value === "" ? data : filteredData(value, data);
@@ -98,12 +102,7 @@ let Map = () => {
         <>
           <p className="darkModeText">Dark mode is {darkMode ? "on" : "off"}</p>
           <Toggle handleTheme={handleTheme}></Toggle>
-          <Search
-            handleChange={(e) => {
-              const deb = debounce(() => setValue(e.target.value));
-              deb();
-            }}
-          />
+          <Search handleChange={(e) => debouncedValue(e.target.value)} />
           <MapProducer
             viewport={viewport}
             darkMode={darkMode}
