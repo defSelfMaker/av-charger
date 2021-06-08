@@ -188,3 +188,8 @@ input:checked + .slider:before {
 .pre {
   line-height: 30px;
 }
+
+.helpers li a {
+  text-decoration: none;
+  color: #2196f3;
+}

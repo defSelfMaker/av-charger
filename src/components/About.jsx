@@ -1,5 +1,10 @@
 let About = () => {
-  return <p>About</p>;
+  return (
+    <p>
+      EV charging station locator with an option to filter the type of
+      connection provided by the charging station.
+    </p>
+  );
 };
 
 export default About;
