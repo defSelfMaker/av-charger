@@ -60,14 +60,16 @@ ol {
   color: #2196f3;
 }
 
-h3,
-.load {
+h3 {
   width: auto;
   margin: 20px;
 }
 
 .load {
   max-width: 100px;
+  width: auto;
+  margin: 20px;
+  margin-left: 50px;
 }
 
 .lists {
@@ -155,4 +157,34 @@ input:checked + .slider:before {
 
 .popup {
   color: crimson;
+}
+
+.nav {
+  text-align: center;
+}
+
+.nav ul li {
+  display: inline-block;
+  margin: 0 50px;
+  /* text-decoration: #2196f3; */
+}
+
+.nav ul li a {
+  text-decoration: none;
+}
+
+.nav ul li:hover a {
+  color: #2196f3;
+  transition: 300ms;
+}
+
+.nav ul li a:active {
+  color: blue;
+}
+
+/* .more-info {
+} */
+
+.pre {
+  line-height: 30px;
 }
