@@ -1,7 +1,11 @@
 import { Popup } from "react-map-gl";
+import { MyContext } from "../utils/MyContext";
+import { useContext } from "react";
 
-let Information = ({ selectedStation, setSelectedStation }) => {
-  return (
+let Information = () => {
+  const { selectedStation, setSelectedStation } = useContext(MyContext);
+
+  return selectedStation ? (
     <Popup
       latitude={selectedStation.AddressInfo.Latitude}
       longitude={selectedStation.AddressInfo.Longitude}
@@ -17,7 +21,7 @@ let Information = ({ selectedStation, setSelectedStation }) => {
         </p>
       </div>
     </Popup>
-  );
+  ) : null;
 };
 
 export default Information;

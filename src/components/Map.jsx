@@ -1,9 +1,16 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
 import CurrentList from "./CurrentList";
 import HistoryList from "./HistoryList";
 import Search from "./Search";
 import Toggle from "./Toggle";
 import MapProducer from "./MapProducer";
+import { MyContext } from "../utils/MyContext";
 import filteredData from "../utils/filterData";
 import debounce from "lodash.debounce";
 
@@ -23,6 +30,18 @@ let Map = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [error, setError] = useState(false);
   const controllerRef = useRef(new AbortController());
+
+  const providerValue = useMemo(
+    () => ({
+      darkMode,
+      viewport,
+      setViewport,
+      selectedStation,
+      setSelectedStation,
+      value,
+    }),
+    [darkMode, viewport, setViewport, selectedStation, setSelectedStation]
+  );
 
   const debouncedValue = useCallback(
     debounce((nextValue) => setValue(nextValue), 1000),
@@ -63,6 +82,7 @@ let Map = () => {
   useEffect(() => {
     const historyData = localStorage.getItem("historyStations");
     setHistory(JSON.parse(historyData));
+
     const listener = (e) => {
       if (e.key === "Escape") {
         setSelectedStation(null);
@@ -99,20 +119,18 @@ let Map = () => {
       {loading ? (
         <p>Map is loading...</p>
       ) : (
-        <>
+        <MyContext.Provider value={providerValue}>
           <p className="darkModeText">Dark mode is {darkMode ? "on" : "off"}</p>
           <Toggle handleTheme={handleTheme}></Toggle>
           <Search handleChange={(e) => debouncedValue(e.target.value)} />
           <MapProducer
-            viewport={viewport}
             darkMode={darkMode}
-            filteredDataArray={filteredDataArray}
+            viewport={viewport}
             setViewport={setViewport}
-            selectedStation={selectedStation}
-            searchValue={value}
+            filteredDataArray={filteredDataArray}
+            // searchValue={value}
             handleClick={handleClick}
             setHistory={setHistory}
-            setSelectedStation={setSelectedStation}
           />
           <div className="lists">
             <div className="list">
@@ -142,7 +160,7 @@ let Map = () => {
               />
             </div>
           </div>
-        </>
+        </MyContext.Provider>
       )}
     </div>
   );

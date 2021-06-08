@@ -5,15 +5,12 @@ import MarkerProducer from "./MarkerProducer";
 // import { Marker } from "react-map-gl";
 
 let MapProducer = ({
-  viewport,
-  setViewport,
-  darkMode,
   filteredDataArray,
-  selectedStation,
-  setSelectedStation,
-  searchValue,
   handleClick,
   setHistory,
+  darkMode,
+  viewport,
+  setViewport,
 }) => {
   // const mapRef = useRef();
 
@@ -84,20 +81,13 @@ let MapProducer = ({
               }
             })} */}
       <MarkerProducer
-        selectedStation={selectedStation}
         data={filteredDataArray}
         handleClick={(point) => {
           handleClick(point);
           setHistory((prevHistory) => [...prevHistory, point]);
         }}
-        searchValue={searchValue}
       />
-      {selectedStation ? (
-        <Information
-          selectedStation={selectedStation}
-          setSelectedStation={setSelectedStation}
-        />
-      ) : null}
+      <Information />
     </ReactMapGl>
   );
 };

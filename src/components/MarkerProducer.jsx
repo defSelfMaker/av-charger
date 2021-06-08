@@ -1,27 +1,9 @@
 import { Marker } from "react-map-gl";
+import { MyContext } from "../utils/MyContext";
+import { useContext } from "react";
 
-let MarkerProducer = ({ searchValue, selectedStation, data, handleClick }) => {
-  let filteredData = () => {
-    let checkValue = (connectionArr) => {
-      for (let i = 0; i < connectionArr.length; i++) {
-        if (
-          connectionArr[i].ConnectionType.Title.toLowerCase().includes(
-            searchValue.toLowerCase()
-          )
-        ) {
-          return true;
-        }
-      }
-      return false;
-    };
-
-    let result = data.filter((item) => {
-      return item.Connections && checkValue(item.Connections);
-    });
-    return result;
-  };
-
-  let newData = searchValue === "" ? data : filteredData();
+let MarkerProducer = ({ data, handleClick }) => {
+  const { selectedStation } = useContext(MyContext);
 
   return selectedStation ? (
     <div>
@@ -39,7 +21,7 @@ let MarkerProducer = ({ searchValue, selectedStation, data, handleClick }) => {
       </Marker>
     </div>
   ) : (
-    newData.map((item, ind) => {
+    data.map((item, ind) => {
       return (
         <div key={ind}>
           <Marker
