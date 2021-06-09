@@ -1,7 +1,9 @@
 import List from "./common/List";
 
 let HistoryList = (props) => {
-  return props.data.length ? (
+  const { data } = props || [];
+
+  return data.length > 0 ? (
     <>
       <List {...props} />
       <button onClick={props.cleanHistory}>Clear History</button>
