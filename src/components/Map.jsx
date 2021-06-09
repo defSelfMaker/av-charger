@@ -40,7 +40,14 @@ let Map = () => {
       setSelectedStation,
       value,
     }),
-    [darkMode, viewport, setViewport, selectedStation, setSelectedStation]
+    [
+      darkMode,
+      viewport,
+      setViewport,
+      selectedStation,
+      setSelectedStation,
+      value,
+    ]
   );
 
   const debouncedValue = useCallback(
